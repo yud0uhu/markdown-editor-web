@@ -1,6 +1,8 @@
 extern crate cfg_if;
 extern crate wasm_bindgen;
 
+use pulldown_cmark::{html, Options, Parser};
+
 mod utils;
 
 use cfg_if::cfg_if;
@@ -22,4 +24,17 @@ extern "C" {
 #[wasm_bindgen]
 pub fn greet(name: &str) {
     alert(&format!("Hello,{}!", name));
+}
+
+#[wasm_bindgen]
+pub fn pulldown_cmark(source_text: &str) -> String {
+    let markdown_input = source_text;
+
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_STRIKETHROUGH);
+    let parser = Parser::new_ext(markdown_input, options);
+
+    let mut html_output = String::new();
+    html::push_html(&mut html_output, parser);
+    html_output
 }
