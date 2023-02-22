@@ -5,7 +5,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "wasm": "wasm-pack build ./markdown-perser --target web"
   },
   "devDependencies": {
     "nuxt": "^3.2.2",
