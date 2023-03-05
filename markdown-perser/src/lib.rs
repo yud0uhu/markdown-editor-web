@@ -216,18 +216,23 @@ fn parse(tokens: &[Token]) -> Vec<AstNode> {
 fn test_lex_and_parse() {
     let input = "\
 # Hello, world!\n
-This is a markdown _parser_.
-";
+This is a *markdown* _parser_ .";
     let expected_output = vec![
         AstNode::Heading("Hello, world!".to_string()),
         AstNode::Paragraph(vec![
             AstNode::Text("\n".to_string()),
             AstNode::Text("\n".to_string()),
-            AstNode::Text("This is a markdown ".to_string()),
+            AstNode::Text("This is a ".to_string()),
+            AstNode::Bold("markdown".to_string()),
+            AstNode::Paragraph(vec![
+                AstNode::Text(" ".to_string()),
+                AstNode::Bold(" ".to_string()),
+            ]),
             AstNode::Italic("parser".to_string()),
             AstNode::Paragraph(vec![
-                AstNode::Text(".".to_string()),
-                AstNode::Italic(".".to_string()),
+                AstNode::Text(" .".to_string()),
+                AstNode::Bold(" .".to_string()),
+                AstNode::Italic(" .".to_string()),
             ]),
         ]),
     ];
