@@ -1,7 +1,7 @@
 extern crate cfg_if;
 extern crate wasm_bindgen;
 
-use pulldown_cmark::{html, Options, Parser};
+// use pulldown_cmark::{html, Options, Parser};
 
 mod utils;
 
@@ -20,30 +20,26 @@ cfg_if! {
         static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
     }
 }
-
 #[wasm_bindgen]
 extern "C" {
     fn alert(s: &str);
 }
-
 #[wasm_bindgen]
 pub fn greet(name: &str) {
     alert(&format!("Hello,{}!", name));
 }
+// #[wasm_bindgen]
+// pub fn pulldown_cmark(source_text: &str) -> String {
+//     let markdown_input = source_text;
 
-#[wasm_bindgen]
-pub fn pulldown_cmark(source_text: &str) -> String {
-    let markdown_input = source_text;
+//     let mut options = Options::empty();
+//     options.insert(Options::ENABLE_STRIKETHROUGH);
+//     let parser = Parser::new_ext(markdown_input, options);
 
-    let mut options = Options::empty();
-    options.insert(Options::ENABLE_STRIKETHROUGH);
-    let parser = Parser::new_ext(markdown_input, options);
-
-    let mut html_output = String::new();
-    html::push_html(&mut html_output, parser);
-    html_output
-}
-
+//     let mut html_output = String::new();
+//     html::push_html(&mut html_output, parser);
+//     html_output
+// }
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 enum Token {
@@ -120,15 +116,50 @@ fn lex(input: &str) -> Vec<Token> {
             buffer.clear();
         }
         tokens.push(Token::Text("\n".to_string()));
-    }
 
-    tokens.pop(); // Remove last newline
+        if let Some(Token::Text(last)) = tokens.last() {
+            if last == "\n" {
+                tokens.pop();
+            }
+        }
+    }
 
     tokens
 }
 
-// #[wasm_bindgen]
-// pub fn text_to_token(source_text: &str) -> String {}
+#[wasm_bindgen]
+pub fn text_to_token(input_text: &str) -> String {
+    let tokens = lex(input_text);
+    let ast = parse(&tokens);
+    generate_html(&ast)
+}
+
+fn generate_html(ast: &[AstNode]) -> String {
+    let mut result = String::new();
+    for node in ast {
+        match node {
+            AstNode::Heading(text) => {
+                result.push_str(&format!("<h1>{}</h1>", text));
+            }
+            AstNode::Bold(text) => {
+                result.push_str(&format!("<b>{}</b>", text));
+            }
+            AstNode::Italic(text) => {
+                result.push_str(&format!("<i>{}</i>", text));
+            }
+            AstNode::Text(text) => {
+                result.push_str(&text);
+            }
+            AstNode::Paragraph(nodes) => {
+                result.push_str("<p>");
+                result.push_str(&generate_html(nodes));
+                result.push_str("</p>");
+            }
+        }
+    }
+    result
+}
+
 #[test]
 fn test_lex() {
     let input = "## Heading 2\n\nMore *bold* and _italic_ text.";
@@ -175,7 +206,7 @@ fn parse(tokens: &[Token]) -> Vec<AstNode> {
                     current_paragraph.push(AstNode::Bold(text.clone()));
                     in_bold = true;
                 } else {
-                    result.push(AstNode::Bold(text.clone()));
+                    current_paragraph.push(AstNode::Text(text.clone()));
                     in_bold = false;
                 }
             }
@@ -184,7 +215,7 @@ fn parse(tokens: &[Token]) -> Vec<AstNode> {
                     current_paragraph.push(AstNode::Italic(text.clone()));
                     in_italic = true;
                 } else {
-                    result.push(AstNode::Italic(text.clone()));
+                    current_paragraph.push(AstNode::Text(text.clone()));
                     in_italic = false;
                 }
             }
@@ -200,7 +231,8 @@ fn parse(tokens: &[Token]) -> Vec<AstNode> {
                     if in_italic {
                         inner_paragraph.push(AstNode::Italic(text.clone()));
                     }
-                    current_paragraph.push(AstNode::Paragraph(inner_paragraph));
+                    in_bold = false;
+                    in_italic = false;
                 }
             }
         }
@@ -208,6 +240,7 @@ fn parse(tokens: &[Token]) -> Vec<AstNode> {
 
     if !current_paragraph.is_empty() {
         result.push(AstNode::Paragraph(current_paragraph.clone()));
+        current_paragraph.clear();
     }
 
     result
