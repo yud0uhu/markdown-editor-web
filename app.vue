@@ -1,14 +1,15 @@
 <template>
   <div>
     <textarea @change="convert" v-model="inputText"></textarea>
+    <p>{{ outputText }}</p>
     <!-- <NuxtWelcome /> -->
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import init, { greet, pulldown_cmark } from "markdown-perser";
+import init, { greet, text_to_token } from "markdown-perser";
 
-let wasmContainer: { pulldown_cmark: typeof pulldown_cmark };
+let wasmContainer: { text_to_token: typeof text_to_token };
 import("markdown-perser").then((wasm) => (wasmContainer = wasm));
 export default defineComponent({
   name: "App",
@@ -19,11 +20,14 @@ export default defineComponent({
       // greet("from vite!");
     });
     const inputText = ref("");
+    const outputText = ref("");
     const convert = () => {
       console.log(inputText.value);
-      console.log(wasmContainer?.pulldown_cmark(inputText.value));
+      console.log(wasmContainer?.text_to_token(inputText.value));
+      outputText.value = wasmContainer?.text_to_token(inputText.value);
+      // console.log(wasmContainer?.pulldown_cmark(inputText.value));
     };
-    return { convert, inputText };
+    return { convert, inputText, outputText };
   },
 });
 </script>
