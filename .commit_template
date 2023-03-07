@@ -1,0 +1,43 @@
+# ==== Prefix ====
+
+# fix バグ修正、クリティカルなバグ修正なら hotfix
+
+# feat feat は feature の略
+
+# docs ドキュメントのみ修正
+
+# style 空白、セミコロン、行、コーディングフォーマットなどの修正
+
+# refactor 整理 （リファクタリング等）
+
+# test テスト追加や間違っていたテストの修正
+
+# chore ビルドツールやライブラリで自動生成されたものをコミットするとき
+
+# ==== Emojis ====
+
+# :bug: バグ修正 (fix)
+
+# :+1: 機能改善 (fix/feat)
+
+# :sparkles: 部分的な機能追加 (feat)
+
+# :tada: 盛大に祝うべき大きな機能追加 (feat)
+
+# :rocket: パフォーマンス改善 (feat)
+
+# :lock: 新機能の公開範囲の制限 (feat)
+
+# :cop: セキュリティ関連の改善 (feat)
+
+# :note: ドキュメント修正 (docs)
+
+# :shirt: Lint エラーの修正やコードスタイルの修正 (style)
+
+# :recycle: リファクタリング (refactor)
+
+# :shower: 不要な機能・使われなくなった機能の削除 (refactor)
+
+# :green_heart: テストや CI の修正・改善 (test)
+
+# :up: 依存パッケージなどのアップデート (chore)
