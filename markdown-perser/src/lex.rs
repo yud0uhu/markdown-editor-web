@@ -40,33 +40,70 @@ pub fn lex(input: &str) -> Vec<Token> {
 
                     break;
                 }
-                ('*', false, false) => {
+
+                ('>', false, false) => {
+                    // BlockQuotes
+                    if !buffer.is_empty() {
+                        tokens.push(Token::Text(buffer.clone()));
+                        buffer.clear();
+                    }
+                    // Skip whitespace
+                    while let Some(' ') = chars.peek() {
+                        chars.next();
+                    }
+
+                    tokens.push(Token::BlockQuotes(chars.collect()));
+
+                    break;
+                }
+                ('-' | '+', false, false) => {
+                    // Lists
+                    if !buffer.is_empty() {
+                        tokens.push(Token::Text(buffer.clone()));
+                        buffer.clear();
+                    }
+                    // Skip whitespace
+                    while let Some(' ') = chars.peek() {
+                        chars.next();
+                    }
+
+                    tokens.push(Token::Lists(chars.collect()));
+
+                    break;
+                }
+                // '*' の前に '*' がある場合にのみ Token::Bold にマッチさせる
+                // in_bold が true の場合、次の文字が '*' の場合にのみ Token::Bold を終了する
+                ('*', false, false) if chars.peek() == Some(&'*') => {
                     // Bold
+                    chars.next();
                     if !buffer.is_empty() {
                         tokens.push(Token::Text(buffer.clone()));
                         buffer.clear();
                     }
                     in_bold = true;
                 }
-                ('*', true, false) => {
+                ('*', true, false) if chars.peek() == Some(&'*') => {
                     // End of Bold
+                    chars.next();
                     tokens.push(Token::Bold(buffer.clone()));
                     buffer.clear();
                     in_bold = false;
                 }
                 ('_', false, false) => {
                     // Italic
+                    chars.next();
                     if !buffer.is_empty() {
                         tokens.push(Token::Text(buffer.clone()));
                         buffer.clear();
                     }
                     in_italic = true;
                 }
-                ('_', false, true) => {
+                ('_', false, true) if chars.peek() == Some(&'_') => {
                     // End of Italic
+                    chars.next();
                     tokens.push(Token::Italic(buffer.clone()));
                     buffer.clear();
-                    in_italic = false;
+                    in_bold = false;
                 }
                 _ => {
                     // Text

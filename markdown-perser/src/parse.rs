@@ -17,6 +17,20 @@ pub fn parse(tokens: &[Token]) -> Vec<AstNode> {
                 }
                 result.push(AstNode::Heading(level.clone(), text.clone()));
             }
+            Token::BlockQuotes(text) => {
+                if !current_paragraph.is_empty() {
+                    result.push(AstNode::Paragraph(current_paragraph.clone()));
+                    current_paragraph.clear();
+                }
+                result.push(AstNode::BlockQuotes(text.clone()));
+            }
+            Token::Lists(text) => {
+                if !current_paragraph.is_empty() {
+                    result.push(AstNode::Paragraph(current_paragraph.clone()));
+                    current_paragraph.clear();
+                }
+                result.push(AstNode::Lists(text.clone()));
+            }
             Token::Bold(text) => {
                 if !in_bold {
                     current_paragraph.push(AstNode::Bold(text.clone()));

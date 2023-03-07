@@ -22,6 +22,12 @@ pub fn generate_html(ast: &[AstNode]) -> String {
             AstNode::Heading(HeadingLevel::H6, text) => {
                 result.push_str(&format!("<h6>{}</h6>", text));
             }
+            AstNode::BlockQuotes(text) => {
+                result.push_str(&format!("<blockquote>{}</blockquote>", text));
+            }
+            AstNode::Lists(text) => {
+                result.push_str(&format!("<ul><li>{}</li></ul>", text));
+            }
             AstNode::Bold(text) => {
                 result.push_str(&format!("<b>{}</b>", text));
             }

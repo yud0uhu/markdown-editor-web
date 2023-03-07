@@ -51,6 +51,8 @@ pub enum Token {
     Bold(String),
     Italic(String),
     Text(String),
+    BlockQuotes(String),
+    Lists(String),
 }
 
 #[wasm_bindgen]
@@ -62,9 +64,10 @@ pub fn text_to_token(input_text: &str) -> String {
 
 #[test]
 fn test_lex() {
-    let input = "## Heading 2\n\nMore *bold* and _italic_ text.";
+    let input = "## Heading 2\n\n> This is a blockquote.\n\nMore **bold** and __italic__ text.";
     let expected_output = vec![
         Token::Heading(HeadingLevel::H2, "Heading 2".to_string()),
+        Token::BlockQuotes("This is a blockquote.".to_string()),
         Token::Text("More ".to_string()),
         Token::Bold("bold".to_string()),
         Token::Text(" and ".to_string()),
@@ -81,6 +84,8 @@ pub enum AstNode {
     Bold(String),
     Italic(String),
     Text(String),
+    BlockQuotes(String),
+    Lists(String),
     Paragraph(Vec<AstNode>),
 }
 
@@ -99,9 +104,11 @@ pub enum HeadingLevel {
 fn test_lex_and_parse() {
     let input = "\
 # Hello, world!\n
-This is a *markdown* _parser_ .";
+> This is a blockquote\n
+This is a **markdown** __parser__.";
     let expected_output = vec![
         AstNode::Heading(HeadingLevel::H1, "Hello, world!".to_string()),
+        AstNode::BlockQuotes("This is a blockquote".to_string()),
         AstNode::Paragraph(vec![
             AstNode::Text("This is a ".to_string()),
             AstNode::Bold("markdown".to_string()),
