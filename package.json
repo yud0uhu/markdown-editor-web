@@ -9,7 +9,14 @@
     "wasm": "wasm-pack build ./markdown-perser --target web"
   },
   "devDependencies": {
+    "@nuxtjs/color-mode": "^3.2.0",
+    "@nuxtjs/tailwindcss": "^6.4.1",
+    "@tailwindcss/typography": "^0.5.9",
+    "autoprefixer": "^10.4.13",
+    "daisyui": "^2.51.3",
     "nuxt": "^3.2.2",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7",
     "vite": "^4.1.4",
     "vite-plugin-wasm-pack": "^0.1.12"
   }
