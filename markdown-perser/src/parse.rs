@@ -1,4 +1,8 @@
-use crate::{ast::AstNode, token::Token};
+use crate::{
+    ast::AstNode,
+    lex, parse,
+    token::{HeadingLevel, Token},
+};
 
 pub fn parse(tokens: &[Token]) -> Vec<AstNode> {
     let mut result = Vec::new();
@@ -72,4 +76,23 @@ pub fn parse(tokens: &[Token]) -> Vec<AstNode> {
     }
 
     result
+}
+#[test]
+fn test_lex_and_parse() {
+    let input = "\
+# Hello, world!\n
+> This is a blockquote\n
+This is a **markdown** __parser__.";
+    let expected_output = vec![
+        AstNode::Heading(HeadingLevel::H1, "Hello, world!".to_string()),
+        AstNode::BlockQuotes("This is a blockquote".to_string()),
+        AstNode::Paragraph(vec![
+            AstNode::Text("This is a ".to_string()),
+            AstNode::Bold("markdown".to_string()),
+            AstNode::Italic("parser".to_string()),
+        ]),
+    ];
+    let tokens = lex::lex(input);
+    let output = parse::parse(&tokens);
+    assert_eq!(output, expected_output);
 }
