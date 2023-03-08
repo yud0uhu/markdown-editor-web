@@ -12,11 +12,6 @@ mod token;
 
 use wasm_bindgen::prelude::*;
 
-use std::iter::Peekable;
-use std::vec::IntoIter;
-
-pub type PeekableIter<T> = Peekable<IntoIter<T>>;
-
 // cfg_if! {
 //     if #[cfg(feature = "wee_alloc")] {
 //         extern crate wee_alloc;

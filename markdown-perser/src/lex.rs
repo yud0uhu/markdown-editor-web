@@ -16,10 +16,6 @@ pub fn lex(input: &str) -> Vec<Token> {
             match (c, in_bold, in_italic) {
                 ('#', false, false) => {
                     // Heading
-                    if !buffer.is_empty() {
-                        tokens.push(Token::Text(buffer.clone()));
-                        buffer.clear();
-                    }
                     let mut level = 1;
                     while chars.peek() == Some(&'#') {
                         chars.next();
