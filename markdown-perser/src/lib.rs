@@ -5,9 +5,9 @@ extern crate wasm_bindgen;
 // use cfg_if::cfg_if;
 
 mod ast;
-mod generator;
 mod lex;
 mod parse;
+mod to_html;
 mod token;
 
 use wasm_bindgen::prelude::*;
@@ -50,5 +50,5 @@ pub type PeekableIter<T> = Peekable<IntoIter<T>>;
 pub fn text_to_token(input_text: &str) -> String {
     let tokens = lex::lex(input_text);
     let ast = parse::parse(&tokens);
-    generator::generate_html(&ast)
+    to_html::generate_html(&ast)
 }
