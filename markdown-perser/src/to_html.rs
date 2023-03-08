@@ -1,4 +1,4 @@
-use crate::{AstNode, HeadingLevel};
+use crate::{ast::AstNode, token::HeadingLevel};
 
 pub fn generate_html(ast: &[AstNode]) -> String {
     let mut result = String::new();

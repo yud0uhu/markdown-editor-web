@@ -1,6 +1,4 @@
-use crate::AstNode;
-use crate::HeadingLevel;
-use crate::Token;
+use crate::{ast::AstNode, token::Token};
 
 pub fn parse(tokens: &[Token]) -> Vec<AstNode> {
     let mut result = Vec::new();
