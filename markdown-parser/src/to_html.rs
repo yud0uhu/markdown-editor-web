@@ -42,16 +42,17 @@ pub fn generate_html(ast: &[AstNode]) -> String {
             AstNode::Text(text) => {
                 result.push_str(&text);
             }
-            // リストの終了タグはリスト全体の生成が終わった後に追加する
+
             AstNode::Paragraph(nodes) => {
-                if is_in_list {
-                    result.push_str("</ul>");
-                    is_in_list = false;
-                }
                 result.push_str("<p>");
                 result.push_str(&generate_html(nodes));
                 result.push_str("</p>");
             }
+        }
+        // リストの終了タグはリスト全体の生成が終わった後に追加する
+        if is_in_list {
+            result.push_str("</ul>");
+            is_in_list = false;
         }
     }
     result
