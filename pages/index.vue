@@ -97,10 +97,10 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import init, { text_to_token } from "markdown-parser";
+import init, { text_to_token } from "../markdown-parser/pkg";
 
 let wasmContainer: { text_to_token: typeof text_to_token };
-import("markdown-parser").then((wasm) => (wasmContainer = wasm));
+import("../markdown-parser/pkg").then((wasm) => (wasmContainer = wasm));
 
 export default defineComponent({
   name: "App",

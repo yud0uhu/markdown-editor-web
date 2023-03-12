@@ -7,7 +7,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "wasm": "wasm-pack build ./markdown-parser --target web"
+    "wasm": "wasm-pack build ./markdown-parser --target web && nuxt build"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.2.0",
