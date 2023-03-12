@@ -6,5 +6,5 @@ export default defineConfig({
     minify: false,
   },
   // pass your local crate path to the plugin
-  plugins: [wasmPack("./markdown-perser")],
+  plugins: [wasmPack("./markdown-parser")],
 });
