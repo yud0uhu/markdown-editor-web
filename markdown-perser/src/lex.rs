@@ -103,7 +103,7 @@ pub fn lex(input: &str) -> Vec<Token> {
                     chars.next();
                     tokens.push(Token::Italic(buffer.clone()));
                     buffer.clear();
-                    in_bold = false;
+                    in_italic = false;
                 }
                 _ => {
                     // Text
