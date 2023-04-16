@@ -1,0 +1,3 @@
+[submodule "markdown-parser"]
+	path = markdown-parser
+	url = https://github.com/yud0uhu/markdown-parser
